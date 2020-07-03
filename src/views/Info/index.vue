@@ -33,16 +33,13 @@
         </el-col>
         <el-col :span="8" style="margin-left: -70px">
           <el-form-item label="关键字:">
-            <SelectVue
-              :config="data.configOption"
-              style="width: 100px"
-            ></SelectVue>
+            <SelectVue :config="data.configOption" style="width: 100px" />
           </el-form-item>
           <el-input
             v-model="searchKeyWork"
             placeholder="请输入内容"
             style="width: 200px;padding-right: 10px"
-          ></el-input>
+          />
           <el-button type="danger" style="width: 25%" @click="getInfoList"
             >搜索
           </el-button>
@@ -68,8 +65,8 @@
       @selection-change="handleSelectionChange"
     >
       >
-      <el-table-column type="selection" width="55"></el-table-column>
-      <el-table-column prop="title" label="标题" width="530"></el-table-column>
+      <el-table-column type="selection" width="55" />
+      <el-table-column prop="title" label="标题" width="530" />
       <el-table-column
         prop="categoryId"
         label="类型"
@@ -162,7 +159,9 @@ export default {
     const { confirm } = global();
 
     const data = reactive({
-      configOption: ["id", "title"]
+      configOption: {
+        init: ["id", "title"]
+      }
     });
 
     const options = reactive({

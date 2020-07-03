@@ -36,7 +36,9 @@ export default {
   components: { SelectVue },
   setup() {
     const data = reactive({
-      configOption: ["name", "phone", "email"]
+      configOption: {
+        init: ["name", "phone", "email"]
+      }
     });
 
     return {
