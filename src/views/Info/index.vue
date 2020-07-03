@@ -33,19 +33,10 @@
         </el-col>
         <el-col :span="8" style="margin-left: -70px">
           <el-form-item label="关键字:">
-            <el-select
-              v-model="searchKey"
-              placeholder="请选择"
-              style="width: 80px;margin-left: 10px"
-            >
-              <el-option
-                v-for="item in searchOption"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              >
-              </el-option>
-            </el-select>
+            <SelectVue
+              :config="data.configOption"
+              style="width: 100px"
+            ></SelectVue>
           </el-form-item>
           <el-input
             v-model="searchKeyWork"
@@ -156,17 +147,23 @@ import DialogInfo from "./dialog/info";
 import DialogEditInfo from "./dialog/edit";
 import { getList, deleteInfo } from "../../api/news";
 import { timestampToTime } from "../../utils/common";
+import SelectVue from "../../components/Select";
 
 export default {
   name: "index",
   components: {
     DialogInfo,
-    DialogEditInfo
+    DialogEditInfo,
+    SelectVue
   },
   setup(props, content) {
     const { categoryItem } = common();
 
     const { confirm } = global();
+
+    const data = reactive({
+      configOption: ["id", "title"]
+    });
 
     const options = reactive({
       category: []
@@ -379,6 +376,7 @@ export default {
     });
 
     return {
+      data,
       total,
       options,
       searchOption,

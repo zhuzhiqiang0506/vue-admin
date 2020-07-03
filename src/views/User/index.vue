@@ -10,15 +10,7 @@
         <div class="warp-content">
           <el-row :gutter="20">
             <el-col :span="4">
-              <el-select v-model="se">
-                <el-option
-                  v-for="item in data.option"
-                  :key="item.value"
-                  :value="item.value"
-                  :label="item.label"
-                >
-                </el-option>
-              </el-select>
+              <SelectVue :config="data.configOption"></SelectVue>
             </el-col>
             <el-col :span="4">
               <el-input placeholder="请输入内容"></el-input>
@@ -38,24 +30,13 @@
 
 <script>
 import { reactive } from "@vue/composition-api";
+import SelectVue from "../../components/Select";
 export default {
   name: "userIndex",
+  components: { SelectVue },
   setup() {
     const data = reactive({
-      option: [
-        {
-          value: "name",
-          label: "姓名"
-        },
-        {
-          value: "phone",
-          label: "手机号"
-        },
-        {
-          value: "email",
-          label: "邮箱"
-        }
-      ]
+      configOption: ["name", "phone", "email"]
     });
 
     return {
