@@ -1,8 +1,8 @@
 <template>
   <div>
-    <el-select v-model="selectValue">
+    <el-select v-model="data.selectValue">
       <el-option
-        v-for="item in initOptionData"
+        v-for="item in data.initOption"
         :key="item.value"
         :value="item.value"
         :label="item.label"
@@ -13,12 +13,19 @@
 </template>
 
 <script>
+import { reactive, onMounted } from "@vue/composition-api";
 export default {
   name: "index",
-  data() {
-    return {
+  props: {
+    config: {
+      type: Object,
+      default: () => {}
+    }
+  },
+  setup(props) {
+    const data = reactive({
       selectValue: "",
-      initOptionData: [],
+      initOption: [],
       option: [
         {
           value: "name",
@@ -41,21 +48,17 @@ export default {
           label: "标题"
         }
       ]
-    };
-  },
-  mounted() {
-    this.initOption();
-  },
-  methods: {
-    initOption() {
-      let initData = this.config.init;
+    });
+
+    let initOption = () => {
+      let initData = props.config.init;
       let optionArr = [];
 
       if (initData.length === 0) {
         return 0;
       }
       initData.forEach(item => {
-        let arr = this.option.filter(elem => elem.value === item);
+        let arr = data.option.filter(elem => elem.value === item);
         if (arr.length > 0) {
           optionArr.push(arr[0]);
         }
@@ -64,25 +67,17 @@ export default {
       if (optionArr.length === 0) {
         return 0;
       }
-      this.initOptionData = optionArr;
-      this.selectValue = optionArr[0].value;
-    }
-  },
-  props: {
-    config: {
-      type: Object,
-      default: () => {}
-    }
-  },
-  watch: {
-    config: {
-      handler() {
-        this.initOption();
-      },
-      // 组件初始化时， 马上对config监听
-      // 为false 不会监听
-      immediate: true
-    }
+      data.initOption = optionArr;
+      data.selectValue = optionArr[0].value;
+    };
+
+    onMounted(() => {
+      initOption();
+    });
+
+    return {
+      data
+    };
   }
 };
 </script>
@@ -91,7 +86,7 @@ export default {
 
 <!--
 
-组件目录位置: src -> components -> Select -> index.vue
+组件目录位置: src -> components -> Select -> index2.0.vue
 组件引用方式：import SelectVue from "../../components/Select";
 template: <SelectVue :config="data.configOption"/>
 

@@ -144,7 +144,7 @@ import DialogInfo from "./dialog/info";
 import DialogEditInfo from "./dialog/edit";
 import { getList, deleteInfo } from "../../api/news";
 import { timestampToTime } from "../../utils/common";
-import SelectVue from "../../components/Select";
+import SelectVue from "../../components/Select/index";
 
 export default {
   name: "index",
