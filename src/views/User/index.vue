@@ -104,6 +104,7 @@ export default {
           }
         },
         pagination: {
+          class: "pull-right",
           show: true,
           layout: "total, sizes, prev, pager, next, jumper"
         }

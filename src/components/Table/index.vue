@@ -33,6 +33,8 @@
       </template>
     </el-table>
     <el-pagination
+      style="margin-top: 20px"
+      :class="data.tableConfig.pagination.class"
       v-if="data.tableConfig.pagination.show"
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
@@ -88,7 +90,8 @@ export default {
         pagination: {
           show: true,
           layout: "total, sizes, prev, pager, next, jumper"
-        }
+        },
+        class: ""
       },
       tableData: []
     });
