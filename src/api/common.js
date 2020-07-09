@@ -1,5 +1,6 @@
 import { getCategory, getCategoryAll } from "./news";
 import { reactive } from "@vue/composition-api";
+import service from "../utils/request";
 
 export function common() {
   const categoryItem = reactive({
@@ -30,9 +31,18 @@ export function common() {
         console.log(error);
       });
   };
+
   return {
     categoryItem,
     getInfoCategory,
     getInfoCategoryAll
   };
+}
+
+export function loadTableData(data) {
+  return service.request({
+    method: data.method || "post",
+    url: data.url,
+    data: data.data
+  });
 }
