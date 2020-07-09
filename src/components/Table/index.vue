@@ -32,6 +32,17 @@
         />
       </template>
     </el-table>
+    <el-pagination
+      v-if="data.tableConfig.pagination.show"
+      @size-change="handleSizeChange"
+      @current-change="handleCurrentChange"
+      :current-page="pageData.currentPage"
+      :page-sizes="pageData.pageSizes"
+      :page-size="100"
+      :layout="data.tableConfig.pagination.layout"
+      :total="pageData.total"
+    >
+    </el-pagination>
   </div>
 </template>
 
@@ -45,7 +56,7 @@ import {
   onUpdated
 } from "@vue/composition-api";
 import { tableLoadData } from "./tableLoadData";
-import { recordPage } from "./recordPage";
+import { paginationHook } from "./paginationHook";
 
 export default {
   name: "tableVue",
@@ -58,16 +69,26 @@ export default {
   setup(props, { root }) {
     // 加载数据
     const { tableData, tableLoadDataFun } = tableLoadData({ root });
-    // 分页记录
-    const { a, b } = recordPage({ root });
-    console.log(a);
-    console.log(b);
+    // 页码
+    const {
+      pageData,
+      handleSizeChange,
+      handleCurrentChange,
+      totalCount
+    } = paginationHook({
+      root
+    });
+    // 组件变量
     const data = reactive({
       tableConfig: {
         selection: true,
         recordCheckBox: false,
         requestData: {},
-        tHead: []
+        tHead: [],
+        pagination: {
+          show: true,
+          layout: "total, sizes, prev, pager, next, jumper"
+        }
       },
       tableData: []
     });
@@ -79,10 +100,33 @@ export default {
     /**
      * 方法 methods
      */
-    watch(
+    /*watch(
       () => tableData.item,
       newValue => {
         data.tableData = newValue;
+      }
+    );*/
+
+    /**
+     * 数据渲染
+     */
+    watch(
+      [() => tableData.item, () => tableData.total],
+      ([tableData, tableCount]) => {
+        data.tableData = tableData;
+        totalCount(tableCount);
+      }
+    );
+
+    watch(
+      [() => pageData.currentPage, () => pageData.pageSize],
+      ([currentPage, pageSize]) => {
+        let requestData = data.tableConfig.requestData;
+        if (requestData.data) {
+          requestData.data.pageNumber = currentPage;
+          requestData.data.pageSize = pageSize;
+          tableLoadDataFun(requestData);
+        }
       }
     );
 
@@ -109,7 +153,10 @@ export default {
     onUpdated(() => {});
 
     return {
-      data
+      data,
+      pageData,
+      handleSizeChange,
+      handleCurrentChange
     };
   }
 };
