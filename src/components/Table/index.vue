@@ -38,13 +38,14 @@
 <script>
 import {
   reactive,
+  watch,
   onBeforeMount,
   onMounted,
   onBeforeUpdate,
   onUpdated
 } from "@vue/composition-api";
-import { requestUrl } from "../../api/requestUrl";
-import { loadTableData } from "../../api/common";
+import { tableLoadData } from "./tableLoadData";
+import { recordPage } from "./recordPage";
 
 export default {
   name: "tableVue",
@@ -54,7 +55,13 @@ export default {
       default: () => {}
     }
   },
-  setup(props) {
+  setup(props, { root }) {
+    // 加载数据
+    const { tableData, tableLoadDataFun } = tableLoadData({ root });
+    // 分页记录
+    const { a, b } = recordPage({ root });
+    console.log(a);
+    console.log(b);
     const data = reactive({
       tableConfig: {
         selection: true,
@@ -62,45 +69,22 @@ export default {
         requestData: {},
         tHead: []
       },
-      tableData: [
-        {
-          email: "AAA@qq.com",
-          name: "王大虎",
-          phone: "15011112222",
-          address: "上海市普陀区金沙江路 1518 弄",
-          role: "大哥"
-        },
-        {
-          email: "BBB@qq.com",
-          name: "王二虎",
-          phone: "15011112222",
-          address: "上海市普陀区金沙江路 1518 弄",
-          role: "二哥"
-        }
-      ]
+      tableData: []
     });
+
+    /**
+     * vue3.0 业务逻辑的拆分及组合 复用性
+     */
 
     /**
      * 方法 methods
      */
-    let loadData = () => {
-      let requestJson = data.tableConfig.requestData;
-      let requestData = {
-        url: requestUrl[requestJson.url],
-        method: requestJson.method,
-        data: requestJson.data
-      };
-      loadTableData(requestData)
-        .then(response => {
-          let responseData = response.data.data.data;
-          if (responseData && responseData.length > 0) {
-            data.tableData = responseData;
-          }
-        })
-        .catch(error => {
-          console.log(error);
-        });
-    };
+    watch(
+      () => tableData.item,
+      newValue => {
+        data.tableData = newValue;
+      }
+    );
 
     // 初始化配置项
     // const 声明对象或数组
@@ -118,7 +102,7 @@ export default {
 
     onBeforeMount(() => {
       initTableConfig();
-      loadData();
+      tableLoadDataFun(data.tableConfig.requestData);
     });
     onMounted(() => {});
     onBeforeUpdate(() => {});
