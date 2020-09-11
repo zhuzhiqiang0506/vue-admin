@@ -3,29 +3,51 @@
     title="新增"
     :visible.sync="data.dialogInfoFlag"
     @close="close"
-    width="580px"
+    width="630px"
     @open="openDialog"
   >
     <el-form :model="data.form" ref="addInfoForm">
-      <el-form-item label="类别:" :label-width="data.formLabelWidth">
-        <el-select v-model="data.form.category" placeholder="请选择">
-          <el-option
-            v-for="item in data.categoryOption"
-            :key="item.id"
-            :label="item.category_name"
-            :value="item.id"
-          />
-        </el-select>
+      <el-form-item
+        label="用户名:"
+        :label-width="data.formLabelWidth"
+        prop="category"
+      >
+        <el-input placeholder="请输入用户名" />
       </el-form-item>
-      <el-form-item label="标题:" :label-width="data.formLabelWidth">
-        <el-input v-model="data.form.title" placeholder="请输入标题" />
+      <el-form-item
+        label="姓名:"
+        :label-width="data.formLabelWidth"
+        prop="title"
+      >
+        <el-input v-model="data.form.title" placeholder="请输入姓名" />
       </el-form-item>
-      <el-form-item label="概况:" :label-width="data.formLabelWidth">
-        <el-input
-          type="textarea"
-          v-model="data.form.content"
-          placeholder="请输入概况"
-        />
+      <el-form-item
+        label="手机号:"
+        :label-width="data.formLabelWidth"
+        prop="content"
+      >
+        <el-input v-model="data.form.content" placeholder="请输入手机号" />
+      </el-form-item>
+      <el-form-item
+        label="地区:"
+        :label-width="data.formLabelWidth"
+        prop="content"
+      >
+        <CityPicker />
+      </el-form-item>
+      <el-form-item
+        label="是否启用:"
+        :label-width="data.formLabelWidth"
+        prop="content"
+      >
+        <el-input v-model="data.form.content" placeholder="请输入手机号" />
+      </el-form-item>
+      <el-form-item
+        label="角色:"
+        :label-width="data.formLabelWidth"
+        prop="content"
+      >
+        <el-input v-model="data.form.content" placeholder="请输入手机号" />
       </el-form-item>
     </el-form>
     <div slot="footer" class="dialog-footer">
@@ -40,8 +62,12 @@
 <script>
 import { reactive, watchEffect } from "@vue/composition-api";
 import { add } from "../../../api/news";
+import CityPicker from "../../../components/CityPicker/index";
 export default {
   name: "info",
+  components: {
+    CityPicker
+  },
   props: {
     flag: {
       type: Boolean,
@@ -55,7 +81,7 @@ export default {
   setup(props, { emit, root }) {
     const data = reactive({
       dialogInfoFlag: false,
-      formLabelWidth: "70px",
+      formLabelWidth: "90px",
       form: {
         category: "",
         title: "",

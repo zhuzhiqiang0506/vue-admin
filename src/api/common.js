@@ -46,3 +46,14 @@ export function loadTableData(data) {
     data: data.data
   });
 }
+
+/**
+ * 省市区
+ */
+export function getCityPicker(data) {
+  return service.request({
+    method: "post",
+    url: "/cityPicker",
+    data
+  });
+}
